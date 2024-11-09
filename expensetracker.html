@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: antiquewhite;
+            align-items: center;
+            justify-content: center;
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: right;
+            align-items: center;
+            margin-top: 50px ;
+            margin-left: 250px;
+            margin-right: 250px;
+            background-color: aliceblue;
+            width: 1000px;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        h1{
+            color: #2344a9;
+            text-decoration: underline;
+        }
+        #expenseform{
+            display: flex;
+            flex-direction: column;
+            width: 500px;
+            margin-top: 20px;
+            padding: 20px;
+        }
+        input[type="text"],select,input[type="number"],input[type="submit"]{
+            margin-top: 5px;
+            font-size: 30px;
+        }
+        input[type="submit"]{
+            background-color: aquamarine;
+        }
+        input[type="submit"]:hover{
+            background-color: rgb(33, 237, 169);
+        }
+        table{
+            background-color:rgb(101, 199, 228);
+            color: whitesmoke;
+            font-size: 20px;
+            text-align: left;
+            height: 2px;
+            width: 60%;
+
+        }
+        th{
+            border: 2px solid white;;
+        }
+        #expenselist{
+            background-color: #b3e7f2;
+            color: whitesmoke;
+        }
+        #calculateTotal {
+            margin-top: 20px;
+            font-size: 20px;
+            background-color: lightcoral;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+        #calculateTotal:hover {
+            background-color: darkred;
+        }
+        #totalAmount {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>EXPENSE TRACKER</h1>
+        <form id="expenseform">
+            <input type="text" placeholder="Expense Description" id="Description" required>
+            <select id="dropdown" required>
+                <option value="">Select Category</option>
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Others">Others</option>
+            </select>
+            <input type="number" placeholder="Amount" id="Amount" required>
+            <input type="submit" value="Add Expense">
+        </form>
+        <h1>EXPENSE SUMMARY</h1>
+        <table id="expenseTable">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="expenselist">
+            </tbody>
+         </table>
+         <button id="calculateTotal">Calculate Total Amount</button>
+         <div id="totalAmount">Total Amount: $0</div>         
+    </div>
+
+    <script>
+        let expenseform=document.getElementById("expenseform");
+        let expenselist=document.getElementById("expenselist");
+
+        expenseform.addEventListener("submit",function(event){
+            event.preventDefault();
+            let Description  = document.getElementById("Description").value;
+            let dropdown=document.getElementById("dropdown").value;
+            let Amount = document.getElementById("Amount").value;
+            
+
+            if(Description && dropdown && !isNaN (Amount)){
+                const newRow=document.createElement("tr")
+                newRow.innerHTML= `<td>${Description}</td> <td>${dropdown}</td> <td>${Amount}</td>`;
+                expenselist.appendChild(newRow);
+
+                document.getElementById("Description").value="";
+                document.getElementById("dropdown").value="";
+                document.getElementById("Amount").value="";
+            }
+            else{
+                alert("please fill out all the requirements")
+            }
+        })
+        function calculateTotalAmount() {
+            const rows = expenselist.getElementsByTagName('tr');
+            let total = 0;
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const amount = parseFloat(cells[2].textContent);
+                if (!isNaN(amount)) {
+                    total += amount;
+                }
+            }
+
+            return total;
+        }
+        let calculateTotal = document.getElementById("calculateTotal");
+        let totalAmountDiv = document.getElementById("totalAmount");
+        calculateTotal.addEventListener("click", function() {
+        const totalAmount = calculateTotalAmount();
+        totalAmountDiv.textContent = `Total Amount: $${totalAmount.toFixed(2)}`;
+});     
+    </script>
+</body>
+</html>
